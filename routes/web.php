@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,5 +28,8 @@ Route::middleware('auth')
     Route::get('/', 'AdminController@dashboard')->name('dashboard');
     Route::resource('posts', 'PostController');
     Route::get('users', 'UserController@index')->name('users.index');
+    Route::resource('categories', 'CategoryController');
+
+
 
 });
