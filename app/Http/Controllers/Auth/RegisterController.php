@@ -59,6 +59,9 @@ class RegisterController extends Controller
             'name'      => ['required', 'string', 'max:255'],
             'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'  => ['required', 'string', 'min:8', 'confirmed'],
+            'address'   => ['nullable', 'string', 'max:100'],
+            'phone'     => ['nullable', 'string', 'max:20'],
+            'birth'     => ['nullable', 'date']
 
         ]);
     }
@@ -95,26 +98,26 @@ class RegisterController extends Controller
         }
     }
 
-    public function register(Request $request)
-    {
-        $this->validator($request->all())->validate();
+      public function register(Request $request)
+     {
+         $this->validator($request->all())->validate();
 
-        $user = $this->create($request->all());
+         $user = $this->create($request->all());
 
-        if ($user) {
-            event(new Registered($user));
+         if ($user) {
+             event(new Registered($user));
 
-            $this->guard()->login($user);
+             $this->guard()->login($user);
 
-            if ($response = $this->registered($request, $user)) {
-                return $response;
-            }
+             if ($response = $this->registered($request, $user)) {
+                 return $response;
+             }
 
-            return $request->wantsJson()
-                        ? new JsonResponse([], 201)
-                        : redirect($this->redirectPath());
-        } else {
-            return redirect()->route('register')->with('db-error', 'Errore nel DB. Riprovare'); // TODO: add normal redirect
-        }
-    }
+             return $request->wantsJson()
+                         ? new JsonResponse([], 201)
+                         : redirect($this->redirectPath());
+         } else {
+             return redirect()->route('register')->with('db-error', 'Errore nel DB. Riprovare');
+         }
+     }
 }
